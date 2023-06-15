@@ -3,7 +3,6 @@ import com.itextpdf.kernel.pdf.PdfReader;
 import com.itextpdf.kernel.pdf.canvas.parser.PdfTextExtractor;
 
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -69,6 +68,7 @@ public class BooleanSearchEngine implements SearchEngine {
     }
 
     public List<PageEntry> phraseSearch(List<String> words) throws IOException {
+        System.out.println("запустил поиск по фразе");
         Path file = Paths.get("stop-ru.txt");
         List<String> stopWords = Files.readAllLines(file);
         List<PageEntry> list = new ArrayList<>();
@@ -77,9 +77,24 @@ public class BooleanSearchEngine implements SearchEngine {
                 list.addAll(wordSearch(word));
             }
         }
-        Collections.sort(list);
-        //здесь должен быть перебор списка лист с объединением полей count у объектов, у который
-        //совпадает page и pdfName, но я не знаю, как его сделать
-        return list;
+
+        List<PageEntry> result = listComby(list);
+        System.out.println("запустил перебор результатов");
+        Collections.sort(result);
+        return result;
+    }
+
+    public List<PageEntry> listComby(List<PageEntry> list) {
+        List<PageEntry> result = list;
+        for (PageEntry entry1 : result) {
+            for (PageEntry entry2 : result) {
+                if (entry1.somePage(entry2)) {
+                    entry1.setCount(entry2.getCount() + entry1.getCount());
+                    result.remove(entry2);
+                }
+
+            }
+        }
+        return result;
     }
 }

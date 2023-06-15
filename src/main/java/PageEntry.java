@@ -19,12 +19,29 @@ public class PageEntry implements Comparable<PageEntry> {
             return 0;
     }
 
-    public boolean equals(PageEntry o) {
-        if (this.pdfName == o.pdfName & this.page == o.page) {
-            this.count += o.count;
+    public boolean somePage(PageEntry o) {
+        //return (this.pdfName == o.pdfName & this.page == o.page);
+        if (this.pdfName == o.pdfName & this.page == o.page & this != o) {
+            System.out.println("Нашел одинаковые");
             return true;
         } else {
             return false;
         }
+    }
+
+    public void setCount(int count) {
+        this.count = count;
+    }
+
+    public int getCount() {
+        return count;
+    }
+
+    public int getPage() {
+        return page;
+    }
+
+    public String getPdfName() {
+        return pdfName;
     }
 }
